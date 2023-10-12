@@ -27,8 +27,8 @@ const NewIssuePage = () => {
 
 	const onSubmit: SubmitHandler<IssueForm> = async (data) => {
 		try {
-			const response = await axios.post('/api/issues', data);
-			// router.push('/issues');
+			await axios.post('/api/issues', data);
+			router.push('/issues');
 		} catch (error) {
 			setError('An unexpected error occurred.');
 		}
