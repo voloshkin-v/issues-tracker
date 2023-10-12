@@ -8,7 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createIssueSchema } from '@/app/lib/validationSchemas';
 import { z } from 'zod';
 
-import { Button, Callout, Text, TextArea, TextField } from '@radix-ui/themes';
+import { Button, Callout, TextArea, TextField } from '@radix-ui/themes';
+import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -16,7 +18,7 @@ const NewIssuePage = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm<IssueForm>({
 		resolver: zodResolver(createIssueSchema),
 	});
@@ -26,7 +28,7 @@ const NewIssuePage = () => {
 	const onSubmit: SubmitHandler<IssueForm> = async (data) => {
 		try {
 			const response = await axios.post('/api/issues', data);
-			router.push('/issues');
+			// router.push('/issues');
 		} catch (error) {
 			setError('An unexpected error occurred.');
 		}
@@ -49,11 +51,7 @@ const NewIssuePage = () => {
 						/>
 					</TextField.Root>
 
-					{errors.title && (
-						<Text size="2" color="red" as="p">
-							{errors.title.message}
-						</Text>
-					)}
+					<ErrorMessage>{errors.title?.message}</ErrorMessage>
 				</div>
 
 				<div>
@@ -62,14 +60,12 @@ const NewIssuePage = () => {
 						{...register('description')}
 					/>
 
-					{errors.description && (
-						<Text size="2" color="red" as="p">
-							{errors.description.message}
-						</Text>
-					)}
+					<ErrorMessage>{errors.description?.message}</ErrorMessage>
 				</div>
 
-				<Button>Submit New Issue</Button>
+				<Button disabled={isSubmitting}>
+					Submit New Issue {isSubmitting && <Spinner />}
+				</Button>
 			</form>
 		</div>
 	);
