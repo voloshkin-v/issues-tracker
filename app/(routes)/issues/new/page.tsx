@@ -9,8 +9,7 @@ import { createIssueSchema } from '@/app/lib/validationSchemas';
 import { z } from 'zod';
 
 import { Button, Callout, TextArea, TextField } from '@radix-ui/themes';
-import ErrorMessage from '@/app/components/ErrorMessage';
-import Spinner from '@/app/components/Spinner';
+import { ErrorMessage, Spinner } from '@/app/components';
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
