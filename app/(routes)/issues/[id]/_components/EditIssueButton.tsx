@@ -4,7 +4,7 @@ import { Pencil2Icon } from '@radix-ui/react-icons';
 import { Button } from '@radix-ui/themes';
 
 interface EditIssueButtonProps {
-	issueId: number;
+	issueId: string;
 }
 
 const EditIssueButton = ({ issueId }: EditIssueButtonProps) => {

@@ -1,9 +1,8 @@
-import prisma from '@/prisma/client';
-import { notFound } from 'next/navigation';
+import { getIssueData } from '@/app/api/issues/route';
 
 import { Box, Grid } from '@radix-ui/themes';
-import EditIssueButton from './EditIssueButton';
-import IssueDetails from './IssueDetails';
+import EditIssueButton from './_components/EditIssueButton';
+import IssueDetails from './_components/IssueDetails';
 
 interface IssueDetailPageProps {
 	params: {
@@ -11,20 +10,8 @@ interface IssueDetailPageProps {
 	};
 }
 
-const IssueDetailPage = async ({ params }: IssueDetailPageProps) => {
-	const id = +params.id;
-
-	if (isNaN(id)) {
-		notFound();
-	}
-
-	const issue = await prisma.issue.findUnique({
-		where: {
-			id: Number(id),
-		},
-	});
-
-	if (!issue) notFound();
+const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
+	const issue = await getIssueData(id);
 
 	return (
 		<Grid columns={{ initial: '1', md: '2' }} gap="5">
