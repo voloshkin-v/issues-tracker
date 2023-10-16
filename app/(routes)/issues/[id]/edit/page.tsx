@@ -1,5 +1,4 @@
-import { getIssueData } from '@/app/api/issues/route';
-
+import { getIssue } from '@/lib/issueService';
 import IssueForm from '../../_components/IssueForm';
 
 interface EditIssuePageProps {
@@ -9,7 +8,7 @@ interface EditIssuePageProps {
 }
 
 const EditIssuePage = async ({ params: { id } }: EditIssuePageProps) => {
-	const issue = await getIssueData(id);
+	const issue = await getIssue(id);
 
 	return <IssueForm issue={issue} />;
 };

@@ -1,8 +1,9 @@
-import { getIssueData } from '@/app/api/issues/route';
+import { getIssue } from '@/lib/issueService';
 
-import { Box, Grid } from '@radix-ui/themes';
+import { Box, Flex, Grid } from '@radix-ui/themes';
 import EditIssueButton from './_components/EditIssueButton';
 import IssueDetails from './_components/IssueDetails';
+import DeleteIssueButton from './_components/DeleteIssueButton';
 
 interface IssueDetailPageProps {
 	params: {
@@ -11,7 +12,7 @@ interface IssueDetailPageProps {
 }
 
 const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
-	const issue = await getIssueData(id);
+	const issue = await getIssue(id);
 
 	return (
 		<Grid columns={{ initial: '1', md: '2' }} gap="5">
@@ -20,7 +21,10 @@ const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
 			</Box>
 
 			<Box>
-				<EditIssueButton issueId={id} />
+				<Flex gap="4" direction="column" className="w-fit">
+					<EditIssueButton issueId={id} />
+					<DeleteIssueButton issueId={id} />
+				</Flex>
 			</Box>
 		</Grid>
 	);

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { notFound } from 'next/navigation';
 import prisma from '@/prisma/client';
 import { issueSchema } from '@/lib/validationSchemas';
 
@@ -19,24 +18,4 @@ export const POST = async (request: NextRequest) => {
 	});
 
 	return NextResponse.json(newIssue, { status: 201 });
-};
-
-export const getIssueData = async (issueId: string) => {
-	const id = Number(issueId);
-
-	if (isNaN(id)) {
-		notFound();
-	}
-
-	const issue = await prisma.issue.findUnique({
-		where: {
-			id,
-		},
-	});
-
-	if (!issue) {
-		notFound();
-	}
-
-	return issue;
 };
