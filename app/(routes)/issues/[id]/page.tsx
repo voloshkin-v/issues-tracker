@@ -1,4 +1,6 @@
+import { getServerSession } from 'next-auth';
 import { getIssue } from '@/lib/issueService';
+import authOptions from '@/app/auth/authOptions';
 
 import { Box, Flex, Grid } from '@radix-ui/themes';
 import EditIssueButton from './_components/EditIssueButton';
@@ -13,6 +15,7 @@ interface IssueDetailPageProps {
 
 const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
 	const issue = await getIssue(id);
+	const session = await getServerSession(authOptions);
 
 	return (
 		<Grid columns={{ initial: '1', md: '2' }} gap="5">
@@ -20,12 +23,14 @@ const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
 				<IssueDetails issue={issue} />
 			</Box>
 
-			<Box>
-				<Flex gap="4" direction="column" className="w-fit">
-					<EditIssueButton issueId={id} />
-					<DeleteIssueButton issueId={id} />
-				</Flex>
-			</Box>
+			{session && (
+				<Box>
+					<Flex gap="4" direction="column" className="w-fit">
+						<EditIssueButton issueId={id} />
+						<DeleteIssueButton issueId={id} />
+					</Flex>
+				</Box>
+			)}
 		</Grid>
 	);
 };
