@@ -3,30 +3,21 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Issue, User } from '@prisma/client';
+import toast, { Toaster } from 'react-hot-toast';
 
-import { Box, Flex, Select } from '@radix-ui/themes';
+import { Flex, Select } from '@radix-ui/themes';
 import Spinner from '../loading';
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-	const {
-		data: users,
-		isError,
-		isLoading,
-	} = useQuery<User[]>({
-		queryKey: ['users'],
-		queryFn: () =>
-			axios.get('/api/users').then((response) => response.data),
-		staleTime: 60 * 1000,
-		retry: 3,
-	});
+	const { data: users, isError, isLoading } = useUsers();
 
 	const handleChange = async (userId: string) => {
 		try {
-			axios.patch(`/api/issues/${issue.id}`, {
+			await axios.patch(`/api/is2sues/${issue.id}`, {
 				assignedToUserId: userId === '-' ? null : userId,
 			});
 		} catch (e) {
-			console.log(e);
+			toast.error('Changes could not be saved.');
 		}
 	};
 
@@ -41,26 +32,40 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 	if (isError) return null;
 
 	return (
-		<Select.Root
-			onValueChange={handleChange}
-			defaultValue={issue.assignedToUserId || '-'}>
-			<Select.Trigger />
+		<>
+			<Select.Root
+				onValueChange={handleChange}
+				defaultValue={issue.assignedToUserId || '-'}>
+				<Select.Trigger />
 
-			<Select.Content>
-				<Select.Group>
-					<Select.Label>Suggestions</Select.Label>
+				<Select.Content>
+					<Select.Group>
+						<Select.Label>Suggestions</Select.Label>
 
-					<Select.Item value="-">Unassigned</Select.Item>
+						<Select.Item value="-">Unassigned</Select.Item>
 
-					{users?.map((user) => (
-						<Select.Item key={user.id} value={user.id}>
-							{user.name}
-						</Select.Item>
-					))}
-				</Select.Group>
-			</Select.Content>
-		</Select.Root>
+						{users?.map((user) => (
+							<Select.Item key={user.id} value={user.id}>
+								{user.name}
+							</Select.Item>
+						))}
+					</Select.Group>
+				</Select.Content>
+			</Select.Root>
+
+			<Toaster />
+		</>
 	);
+};
+
+const useUsers = () => {
+	return useQuery<User[]>({
+		queryKey: ['users'],
+		queryFn: () =>
+			axios.get('/api/users').then((response) => response.data),
+		staleTime: 60 * 1000,
+		retry: 3,
+	});
 };
 
 export default AssigneeSelect;
