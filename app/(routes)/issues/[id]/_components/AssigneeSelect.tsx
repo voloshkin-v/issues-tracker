@@ -13,7 +13,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
 	const handleChange = async (userId: string) => {
 		try {
-			await axios.patch(`/api/is2sues/${issue.id}`, {
+			await axios.patch(`/api/issues/${issue.id}`, {
 				assignedToUserId: userId === '-' ? null : userId,
 			});
 		} catch (e) {
@@ -29,7 +29,9 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 		);
 	}
 
-	if (isError) return null;
+	if (isError) {
+		return null;
+	}
 
 	return (
 		<>
@@ -40,8 +42,6 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
 				<Select.Content>
 					<Select.Group>
-						<Select.Label>Suggestions</Select.Label>
-
 						<Select.Item value="-">Unassigned</Select.Item>
 
 						{users?.map((user) => (
