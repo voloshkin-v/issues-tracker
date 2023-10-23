@@ -3,11 +3,7 @@ import { Pencil2Icon } from '@radix-ui/react-icons';
 
 import { Button } from '@radix-ui/themes';
 
-interface EditIssueButtonProps {
-	issueId: string;
-}
-
-const EditIssueButton = ({ issueId }: EditIssueButtonProps) => {
+const EditIssueButton = ({ issueId }: { issueId: string }) => {
 	return (
 		<Button asChild>
 			<Link href={`/issues/${issueId}/edit`}>

@@ -2,11 +2,7 @@ import { IssueStatusBadge } from '@/components';
 import { Issue } from '@prisma/client';
 import { Flex, Heading, Text, Card } from '@radix-ui/themes';
 
-interface IssueDetailsProps {
-	issue: Issue;
-}
-
-const IssueDetails = ({ issue }: IssueDetailsProps) => {
+const IssueDetails = ({ issue }: { issue: Issue }) => {
 	return (
 		<>
 			<Heading as="h2">{issue.title}</Heading>

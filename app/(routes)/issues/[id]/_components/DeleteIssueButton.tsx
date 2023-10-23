@@ -7,11 +7,7 @@ import { useRouter } from 'next/navigation';
 import { AlertDialog, Button, Flex } from '@radix-ui/themes';
 import { Spinner } from '@/components';
 
-interface DeleteIssueButtonProps {
-	issueId: string;
-}
-
-const DeleteIssueButton = ({ issueId }: DeleteIssueButtonProps) => {
+const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
 	const navigation = useRouter();
 	const [error, setError] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);

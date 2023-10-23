@@ -2,13 +2,12 @@
 
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { Issue, User } from '@prisma/client';
 
-import { Select } from '@radix-ui/themes';
-import { User } from '@prisma/client';
-import Skeleton from 'react-loading-skeleton';
+import { Box, Flex, Select } from '@radix-ui/themes';
 import Spinner from '../loading';
 
-const AssigneeSelect = () => {
+const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 	const {
 		data: users,
 		isError,
@@ -21,14 +20,37 @@ const AssigneeSelect = () => {
 		retry: 3,
 	});
 
+	const handleChange = async (userId: string) => {
+		try {
+			axios.patch(`/api/issues/${issue.id}`, {
+				assignedToUserId: userId === '-' ? null : userId,
+			});
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	if (isLoading) {
+		return (
+			<Flex height="6" align="center">
+				<Spinner />
+			</Flex>
+		);
+	}
+
 	if (isError) return null;
 
 	return (
-		<Select.Root disabled={isLoading}>
-			<Select.Trigger placeholder="Asign..." />
+		<Select.Root
+			onValueChange={handleChange}
+			defaultValue={issue.assignedToUserId || '-'}>
+			<Select.Trigger />
+
 			<Select.Content>
 				<Select.Group>
 					<Select.Label>Suggestions</Select.Label>
+
+					<Select.Item value="-">Unassigned</Select.Item>
 
 					{users?.map((user) => (
 						<Select.Item key={user.id} value={user.id}>
