@@ -11,7 +11,6 @@ import { Issue } from '@prisma/client';
 
 import { Button, Callout, TextArea, TextField } from '@radix-ui/themes';
 import { ErrorMessage, Spinner } from '@/components';
-import { revalidatePath } from 'next/cache';
 
 type TIssueForm = z.infer<typeof issueSchema>;
 interface IssueFormProps {

@@ -1,12 +1,14 @@
 import { getServerSession } from 'next-auth';
-import { getIssue } from '@/lib/issueService';
 import authOptions from '@/app/auth/authOptions';
+import { getIssue } from '@/services/issues';
 
 import { Box, Flex, Grid } from '@radix-ui/themes';
-import EditIssueButton from './_components/EditIssueButton';
-import IssueDetails from './_components/IssueDetails';
-import DeleteIssueButton from './_components/DeleteIssueButton';
-import AssigneeSelect from './_components/AssigneeSelect';
+import {
+	AssigneeSelect,
+	DeleteIssueButton,
+	EditIssueButton,
+	IssueDetails,
+} from './_components';
 
 interface IssueDetailPageProps {
 	params: {

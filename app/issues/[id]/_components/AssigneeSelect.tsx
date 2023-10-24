@@ -6,9 +6,13 @@ import { Issue, User } from '@prisma/client';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { Flex, Select } from '@radix-ui/themes';
-import Spinner from '../loading';
+import { Spinner } from '@/components';
 
-const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+interface AssigneeSelectProps {
+	issue: Issue;
+}
+
+const AssigneeSelect = ({ issue }: AssigneeSelectProps) => {
 	const { data: users, isError, isLoading } = useUsers();
 
 	const handleChange = async (userId: string) => {

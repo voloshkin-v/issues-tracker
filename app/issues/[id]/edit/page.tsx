@@ -1,5 +1,6 @@
-import { getIssue } from '@/lib/issueService';
-import IssueForm from '../../_components/IssueForm';
+import { getIssue } from '@/services/issues';
+
+import { IssueForm } from '../../_components';
 
 interface EditIssuePageProps {
 	params: {

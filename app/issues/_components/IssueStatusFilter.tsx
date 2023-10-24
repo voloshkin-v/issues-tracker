@@ -1,18 +1,22 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
 import { Status } from '@prisma/client';
+import { DEFAULT_SELECT_VALUE } from '@/constants';
+
 import { Select } from '@radix-ui/themes';
 
-const statuses: { label: string; value?: Status }[] = [
+interface IStatus {
+	label: string;
+	value?: Status;
+}
+
+const statuses: IStatus[] = [
 	{ label: 'All' },
 	{ label: 'Open', value: 'OPEN' },
 	{ label: 'In Progress', value: 'IN_PROGRESS' },
 	{ label: 'Closed', value: 'CLOSED' },
 ];
-
-const defaultSelectValue = '-';
 
 const IssueStatusFilter = () => {
 	const router = useRouter();
@@ -23,7 +27,8 @@ const IssueStatusFilter = () => {
 	const defaultValue = statuses.find((item) => item.value === status)?.value;
 
 	const handleFilterChange = (status: string) => {
-		const query = status !== defaultSelectValue ? `?status=${status}` : '';
+		const query =
+			status !== DEFAULT_SELECT_VALUE ? `?status=${status}` : '';
 		router.push(`${pathname}${query}`);
 	};
 
@@ -35,7 +40,7 @@ const IssueStatusFilter = () => {
 
 			<Select.Content>
 				{statuses.map(({ label, value }, i) => (
-					<Select.Item key={i} value={value ?? defaultSelectValue}>
+					<Select.Item key={i} value={value ?? DEFAULT_SELECT_VALUE}>
 						{label}
 					</Select.Item>
 				))}

@@ -1,9 +1,7 @@
 'use client';
 
 import { Container, Flex } from '@radix-ui/themes';
-import { AuthStatus } from '@/components';
-import NavLinks from './NavLinks';
-import Logo from './Logo';
+import { AuthStatus, NavLinks, Logo } from '@/components';
 
 const NavBar = () => {
 	return (

@@ -1,6 +1,13 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-import { Avatar, Box, Button, DropdownMenu, Text } from '@radix-ui/themes';
+import {
+	Avatar,
+	Box,
+	Button,
+	DropdownMenu,
+	IconButton,
+	Text,
+} from '@radix-ui/themes';
 import { Skeleton } from '@/components';
 
 const AuthStatus = () => {
@@ -25,13 +32,17 @@ const AuthStatus = () => {
 		<Box>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
-					<Avatar
-						size="2"
-						radius="full"
-						src={session.user?.image!}
-						fallback="?"
-						className="cursor-pointer"
-					/>
+					<IconButton
+						variant="ghost"
+						className="hover:bg-transparent active:bg-transparent">
+						<Avatar
+							size="2"
+							radius="full"
+							src={session.user?.image!}
+							fallback="?"
+							className="cursor-pointer"
+						/>
+					</IconButton>
 				</DropdownMenu.Trigger>
 
 				<DropdownMenu.Content align="end">
