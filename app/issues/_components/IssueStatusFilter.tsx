@@ -8,11 +8,11 @@ import { Select } from '@radix-ui/themes';
 
 interface IStatus {
 	label: string;
-	value?: Status;
+	value: Status | typeof DEFAULT_SELECT_VALUE;
 }
 
 const statuses: IStatus[] = [
-	{ label: 'All' },
+	{ label: 'All', value: 'unassigned' },
 	{ label: 'Open', value: 'OPEN' },
 	{ label: 'In Progress', value: 'IN_PROGRESS' },
 	{ label: 'Closed', value: 'CLOSED' },
@@ -23,24 +23,29 @@ const IssueStatusFilter = () => {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const status = searchParams.get('status');
-	const defaultValue = statuses.find((item) => item.value === status)?.value;
-
 	const handleFilterChange = (status: string) => {
-		const query =
-			status !== DEFAULT_SELECT_VALUE ? `?status=${status}` : '';
-		router.push(`${pathname}${query}`);
+		const params = new URLSearchParams(searchParams);
+
+		status === DEFAULT_SELECT_VALUE
+			? params.delete('status')
+			: params.set('status', status);
+
+		params.delete('page');
+
+		const query = params.toString();
+
+		router.push(`${pathname}?${query}`);
 	};
 
 	return (
 		<Select.Root
 			onValueChange={handleFilterChange}
-			defaultValue={defaultValue}>
+			defaultValue={searchParams.get('status') || ''}>
 			<Select.Trigger placeholder="Filter by status..." />
 
 			<Select.Content>
 				{statuses.map(({ label, value }, i) => (
-					<Select.Item key={i} value={value ?? DEFAULT_SELECT_VALUE}>
+					<Select.Item key={i} value={value}>
 						{label}
 					</Select.Item>
 				))}

@@ -1,32 +1,17 @@
 import NextLink from 'next/link';
 import { ArrowUpIcon } from '@radix-ui/react-icons';
-import { Column, SearchParams } from '@/types';
-import { getIssues } from '@/services/issues';
+import { Issue } from '@prisma/client';
+import { IssueSearchParams, Column } from '../types';
 
 import { Table } from '@radix-ui/themes';
 import { IssueStatusBadge, Link } from '@/components';
 
-const columns: Column[] = [
-	{ label: 'Issue', value: 'title' },
-	{
-		label: 'Status',
-		value: 'status',
-		className: 'hidden md:table-cell',
-	},
-	{
-		label: 'Created',
-		value: 'createdAt',
-		className: 'hidden md:table-cell',
-	},
-];
-
 interface IssueTableProps {
-	searchParams: SearchParams;
+	searchParams: IssueSearchParams;
+	issues: Issue[];
 }
 
-const IssueTable = async ({ searchParams }: IssueTableProps) => {
-	const { issues, orderBy } = await getIssues(searchParams, columns);
-
+const IssueTable = async ({ searchParams, issues }: IssueTableProps) => {
 	return (
 		<Table.Root variant="surface">
 			<Table.Header>
@@ -39,11 +24,16 @@ const IssueTable = async ({ searchParams }: IssueTableProps) => {
 								className="flex w-fit items-center gap-1"
 								href={{
 									pathname: '/issues',
-									query: { ...searchParams, orderBy: value },
+									query: {
+										...searchParams,
+										sortBy: value,
+									},
 								}}>
 								{label}
 
-								{value === orderBy && <ArrowUpIcon />}
+								{value === searchParams.sortBy && (
+									<ArrowUpIcon />
+								)}
 							</NextLink>
 						</Table.ColumnHeaderCell>
 					))}
@@ -68,9 +58,31 @@ const IssueTable = async ({ searchParams }: IssueTableProps) => {
 						</Table.Cell>
 					</Table.Row>
 				))}
+
+				{!issues.length && (
+					<Table.Row>
+						<Table.Cell>There are no issues.</Table.Cell>
+					</Table.Row>
+				)}
 			</Table.Body>
 		</Table.Root>
 	);
 };
+
+const columns: Column[] = [
+	{ label: 'Issue', value: 'title' },
+	{
+		label: 'Status',
+		value: 'status',
+		className: 'hidden md:table-cell',
+	},
+	{
+		label: 'Created',
+		value: 'createdAt',
+		className: 'hidden md:table-cell',
+	},
+];
+
+export const columnNames = columns.map((column) => column.value);
 
 export default IssueTable;

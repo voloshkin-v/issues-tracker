@@ -1,19 +1,30 @@
-import { SearchParams } from '@/types';
+import { getIssues } from '@/services/issues';
+import { IssueSearchParams } from './types';
 
+import { Pagination } from '@/components';
 import { IssueActions, IssueTable } from './_components';
+import { Flex } from '@radix-ui/themes';
+import { PAGINATION_PAGE_SIZE } from '@/constants';
 
 interface IssuesPageProps {
-	searchParams: SearchParams;
+	searchParams: IssueSearchParams;
 }
 
 export const dynamic = 'force-dynamic';
 
 const IssuesPage = async ({ searchParams }: IssuesPageProps) => {
+	const { issues, currentPage, issuesCount } = await getIssues(searchParams);
+
 	return (
-		<>
+		<Flex direction="column" gap="5">
 			<IssueActions />
-			<IssueTable searchParams={searchParams} />
-		</>
+			<IssueTable searchParams={searchParams} issues={issues} />
+			<Pagination
+				currentPage={currentPage}
+				itemsCount={issuesCount}
+				pageSize={PAGINATION_PAGE_SIZE}
+			/>
+		</Flex>
 	);
 };
 

@@ -1,8 +1,9 @@
 import { Issue, Status } from '@prisma/client';
 
-export interface SearchParams {
+export interface IssueSearchParams {
 	status?: Status;
-	orderBy?: keyof Issue;
+	sortBy?: keyof Issue;
+	page?: string;
 }
 
 export interface Column {
