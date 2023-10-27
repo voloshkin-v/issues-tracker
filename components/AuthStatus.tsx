@@ -32,15 +32,12 @@ const AuthStatus = () => {
 		<Box>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
-					<IconButton
-						variant="ghost"
-						className="hover:bg-transparent active:bg-transparent">
+					<IconButton variant="ghost">
 						<Avatar
 							size="2"
 							radius="full"
 							src={session.user?.image!}
 							fallback="?"
-							className="cursor-pointer"
 						/>
 					</IconButton>
 				</DropdownMenu.Trigger>

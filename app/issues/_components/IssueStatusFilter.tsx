@@ -1,10 +1,10 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Status } from '@prisma/client';
 import { DEFAULT_SELECT_VALUE } from '@/constants';
+import { useUpdateSearchParams } from '@/hooks/useUpdateSearchParams';
 
-import { Select } from '@radix-ui/themes';
+import SelectUI from '@/components/SelectUI';
 
 interface IStatus {
 	label: string;
@@ -12,45 +12,22 @@ interface IStatus {
 }
 
 const statuses: IStatus[] = [
-	{ label: 'All', value: 'unassigned' },
+	{ label: 'All', value: DEFAULT_SELECT_VALUE },
 	{ label: 'Open', value: 'OPEN' },
 	{ label: 'In Progress', value: 'IN_PROGRESS' },
 	{ label: 'Closed', value: 'CLOSED' },
 ];
 
 const IssueStatusFilter = () => {
-	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-
-	const handleFilterChange = (status: string) => {
-		const params = new URLSearchParams(searchParams);
-
-		status === DEFAULT_SELECT_VALUE
-			? params.delete('status')
-			: params.set('status', status);
-
-		params.delete('page');
-
-		const query = params.toString();
-
-		router.push(`${pathname}?${query}`);
-	};
+	const { handleChange, searchValue } = useUpdateSearchParams('status');
 
 	return (
-		<Select.Root
-			onValueChange={handleFilterChange}
-			defaultValue={searchParams.get('status') || ''}>
-			<Select.Trigger placeholder="Filter by status..." />
-
-			<Select.Content>
-				{statuses.map(({ label, value }, i) => (
-					<Select.Item key={i} value={value}>
-						{label}
-					</Select.Item>
-				))}
-			</Select.Content>
-		</Select.Root>
+		<SelectUI
+			items={statuses}
+			onValueChange={handleChange}
+			placeholder="Filter by status..."
+			value={searchValue}
+		/>
 	);
 };
 

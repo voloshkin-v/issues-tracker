@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 
 const links = [
 	{ label: 'Dashboard', href: '/' },
-	{ label: 'Issues', href: '/issues' },
+	{ label: 'Issues', href: `/issues` },
 ];
 
 const NavLinks = () => {

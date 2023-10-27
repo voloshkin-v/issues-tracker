@@ -7,6 +7,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import { Flex, Select } from '@radix-ui/themes';
 import { Spinner } from '@/components';
+import SelectUI from '@/components/SelectUI';
+import { DEFAULT_SELECT_VALUE } from '@/constants';
 
 interface AssigneeSelectProps {
 	issue: Issue;
@@ -18,7 +20,8 @@ const AssigneeSelect = ({ issue }: AssigneeSelectProps) => {
 	const handleChange = async (userId: string) => {
 		try {
 			await axios.patch(`/api/issues/${issue.id}`, {
-				assignedToUserId: userId === '-' ? null : userId,
+				assignedToUserId:
+					userId === DEFAULT_SELECT_VALUE ? null : userId,
 			});
 		} catch (e) {
 			toast.error('Changes could not be saved.');
@@ -41,12 +44,14 @@ const AssigneeSelect = ({ issue }: AssigneeSelectProps) => {
 		<>
 			<Select.Root
 				onValueChange={handleChange}
-				defaultValue={issue.assignedToUserId || '-'}>
+				defaultValue={issue.assignedToUserId || DEFAULT_SELECT_VALUE}>
 				<Select.Trigger />
 
 				<Select.Content>
 					<Select.Group>
-						<Select.Item value="-">Unassigned</Select.Item>
+						<Select.Item value={DEFAULT_SELECT_VALUE}>
+							Unassigned
+						</Select.Item>
 
 						{users?.map((user) => (
 							<Select.Item key={user.id} value={user.id}>

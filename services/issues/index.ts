@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation';
 import { IssueSearchParams } from '@/app/issues/types';
 import { columnNames } from '@/app/issues/_components/IssueTable';
 import { Status } from '@prisma/client';
-import { PAGINATION_PAGE_SIZE } from '@/constants';
+import {
+	PAGE_SIZE,
+	sizesOption,
+} from '@/app/issues/_components/IssuePageSize/settings';
 
 export const getIssue = async (issueId: string) => {
 	const id = +issueId || -1;
@@ -22,31 +25,36 @@ export const getIssue = async (issueId: string) => {
 };
 
 export const getIssues = async (searchParams: IssueSearchParams) => {
-	const { sortBy, status, page } = searchParams;
+	const defaultPageSize = Number(PAGE_SIZE);
+	const size = Number(searchParams.pageSize) || defaultPageSize;
+	const pageSize = sizesOption.includes(size) ? size : defaultPageSize;
 
-	const validSortBy =
-		sortBy && columnNames.includes(sortBy)
-			? { [sortBy]: 'asc' }
+	const sortBy =
+		searchParams.sortBy && columnNames.includes(searchParams.sortBy)
+			? { [searchParams.sortBy]: 'asc' }
 			: undefined;
 
-	const validStatus =
-		status && Object.values(Status).includes(status) ? status : undefined;
+	const status =
+		searchParams.status &&
+		Object.values(Status).includes(searchParams.status)
+			? searchParams.status
+			: undefined;
 
-	const where = { status: validStatus };
+	const where = { status };
 
-	const numPage = Number(page);
+	const numPage = Number(searchParams.page);
 	const currentPage = numPage && numPage > 0 ? numPage : 1;
 
 	const issues = await prisma.issue.findMany({
 		where,
-		orderBy: validSortBy,
-		skip: (currentPage - 1) * PAGINATION_PAGE_SIZE,
-		take: PAGINATION_PAGE_SIZE,
+		orderBy: sortBy,
+		skip: (currentPage - 1) * pageSize,
+		take: pageSize,
 	});
 
 	const issuesCount = await prisma.issue.count({
 		where,
 	});
 
-	return { issues, currentPage, issuesCount };
+	return { issues, currentPage, issuesCount, pageSize };
 };

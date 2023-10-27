@@ -4,7 +4,7 @@ import { IssueSearchParams } from './types';
 import { Pagination } from '@/components';
 import { IssueActions, IssueTable } from './_components';
 import { Flex } from '@radix-ui/themes';
-import { PAGINATION_PAGE_SIZE } from '@/constants';
+// import { PAGINATION_PAGE_SIZE } from '@/constants';
 
 interface IssuesPageProps {
 	searchParams: IssueSearchParams;
@@ -13,7 +13,8 @@ interface IssuesPageProps {
 export const dynamic = 'force-dynamic';
 
 const IssuesPage = async ({ searchParams }: IssuesPageProps) => {
-	const { issues, currentPage, issuesCount } = await getIssues(searchParams);
+	const { issues, currentPage, issuesCount, pageSize } =
+		await getIssues(searchParams);
 
 	return (
 		<Flex direction="column" gap="5">
@@ -22,7 +23,7 @@ const IssuesPage = async ({ searchParams }: IssuesPageProps) => {
 			<Pagination
 				currentPage={currentPage}
 				itemsCount={issuesCount}
-				pageSize={PAGINATION_PAGE_SIZE}
+				pageSize={pageSize}
 			/>
 		</Flex>
 	);
