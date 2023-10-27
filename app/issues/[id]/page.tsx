@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/auth/authOptions';
 import { getIssue } from '@/services/issues';
+import { notFound } from 'next/navigation';
 
 import { Box, Flex, Grid } from '@radix-ui/themes';
 import {
@@ -9,7 +10,9 @@ import {
 	EditIssueButton,
 	IssueDetails,
 } from './_components';
-import prisma from '@/prisma/client';
+import { cache } from 'react';
+
+const getCachedIssue = cache((issueId: string) => getIssue(issueId));
 
 interface IssueDetailPageProps {
 	params: {
@@ -18,8 +21,12 @@ interface IssueDetailPageProps {
 }
 
 const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
-	const issue = await getIssue(id);
+	const issue = await getCachedIssue(id);
 	const session = await getServerSession(authOptions);
+
+	if (!issue) {
+		notFound();
+	}
 
 	return (
 		<Grid columns={{ initial: '1', md: '2' }} gap="5">
@@ -44,7 +51,7 @@ const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
 };
 
 export async function generateMetadata({ params }: IssueDetailPageProps) {
-	const issue = await getIssue(params.id);
+	const issue = await getCachedIssue(params.id);
 
 	return {
 		title: issue?.title,

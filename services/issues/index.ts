@@ -9,17 +9,11 @@ import {
 } from '@/app/issues/_components/IssuePageSize/settings';
 
 export const getIssue = async (issueId: string) => {
-	const id = +issueId || -1;
-
 	const issue = await prisma.issue.findUnique({
 		where: {
-			id,
+			id: +issueId || -1,
 		},
 	});
-
-	if (!issue) {
-		notFound();
-	}
 
 	return issue;
 };
