@@ -1,10 +1,10 @@
 import { getIssues } from '@/services/issues';
 import { IssueSearchParams } from './types';
+import { Metadata } from 'next';
 
 import { Pagination } from '@/components';
 import { IssueActions, IssueTable } from './_components';
 import { Flex } from '@radix-ui/themes';
-// import { PAGINATION_PAGE_SIZE } from '@/constants';
 
 interface IssuesPageProps {
 	searchParams: IssueSearchParams;
@@ -27,6 +27,11 @@ const IssuesPage = async ({ searchParams }: IssuesPageProps) => {
 			/>
 		</Flex>
 	);
+};
+
+export const metadata: Metadata = {
+	title: 'Issue Tracker - Issues',
+	description: 'View all project issues.',
 };
 
 export default IssuesPage;

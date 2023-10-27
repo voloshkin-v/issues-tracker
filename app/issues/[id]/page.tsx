@@ -9,6 +9,7 @@ import {
 	EditIssueButton,
 	IssueDetails,
 } from './_components';
+import prisma from '@/prisma/client';
 
 interface IssueDetailPageProps {
 	params: {
@@ -41,5 +42,14 @@ const IssueDetailPage = async ({ params: { id } }: IssueDetailPageProps) => {
 		</Grid>
 	);
 };
+
+export async function generateMetadata({ params }: IssueDetailPageProps) {
+	const issue = await getIssue(params.id);
+
+	return {
+		title: issue?.title,
+		description: `Description of issue ${issue?.id}`,
+	};
+}
 
 export default IssueDetailPage;
