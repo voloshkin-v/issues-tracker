@@ -4,6 +4,8 @@ import { Metadata } from 'next';
 import { Flex, Grid } from '@radix-ui/themes';
 import { IssuesChart, IssuesSummary, LatestIssues } from './issues/_components';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
 	const open = await prisma.issue.count({
 		where: { status: 'OPEN' },

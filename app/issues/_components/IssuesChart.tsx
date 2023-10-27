@@ -10,7 +10,12 @@ interface IssuesChartProps {
 	closed: number;
 }
 
-const IssuesChart = ({ closed, inProgress, open }: IssuesChartProps) => {
+const IssuesChart = (props: IssuesChartProps) => {
+	const isExist = Object.values(props).some((count) => count > 0);
+	if (!isExist) return null;
+
+	const { closed, inProgress, open } = props;
+
 	const data = [
 		{ label: 'Open', value: open },
 		{ label: 'In Progress', value: inProgress },
